@@ -6,7 +6,7 @@ index 294da89..af48db7 100644
  @lru_cache(1)
  def get_version():
 +    try:
-+        return "3.5.4"
++        return "3.5.6"
 +    except:
 +        pass
      try:

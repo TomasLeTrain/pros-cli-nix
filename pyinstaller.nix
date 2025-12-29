@@ -5,10 +5,15 @@
   keyring,
   future,
   django,
+  setuptools,
 }:
 buildPythonApplication rec {
   pname = "pyinstaller";
   version = "5.7.0";
+
+  pyproject = true;
+  build-system = [setuptools];
+
   src = fetchPypi {
     inherit pname version;
     hash = "sha256-DllTk3018LN1Q8xpFdrK8yOby98/0+y7eGZkVGihZ3U=";

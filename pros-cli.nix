@@ -1,77 +1,82 @@
-{ lib
-, callPackage
-, buildPythonApplication
-, fetchFromGitHub
-, click
-, rich-click
-, pyserial
-, cachetools
-, requests
-, requests-futures
-, tabulate
-, jsonpickle
-, semantic-version
-, colorama
-, pyzmq
-, sentry-sdk
-, pypng
-, setuptools
-, installShellFiles
+{
+  lib,
+  callPackage,
+  buildPythonApplication,
+  fetchFromGitHub,
+  # , click
+  # , rich-click
+  pyserial,
+  cachetools,
+  requests,
+  requests-futures,
+  tabulate,
+  jsonpickle,
+  semantic-version,
+  colorama,
+  pyzmq,
+  sentry-sdk,
+  pypng,
+  setuptools,
+  installShellFiles,
 }:
 buildPythonApplication rec {
   pname = "pros-cli";
-  version = "a075f9455ef9f738fc806f963ec678238998348a";
+  version = "5521903419071ea0c040abdda832f31dc848a466";
+
+  pyproject = true;
+  build-system = [setuptools];
 
   src = fetchFromGitHub {
     owner = "purduesigbots";
     repo = "pros-cli";
     rev = "${version}";
-    hash = "sha256-cEtF2W7T2uit4SWvQe/bFHyrzyP/rAEyKHcDlFjZGik=";
+    hash = "sha256-FuqXQk3hnOFipOZZWiLIk9q4P33N+I87NBBf2N+6OOA=";
   };
 
   doCheck = false;
 
-  patches = [ ./version.patch ];
+  patches = [
+    ./version.patch
+  ];
 
   # Relax some dependencies
-  postPatch =
-    ''
-      substituteInPlace requirements.txt \
-        --replace 'scan-build==2.0.13' 'scan-build' \
-        --replace 'pyinstaller' ' ' \
-        --replace 'pypng==0.0.20' 'pypng' \
-    '';
+  postPatch = ''
+    substituteInPlace requirements.txt \
+      --replace 'scan-build==2.0.13' 'scan-build' \
+      --replace 'pyinstaller' ' ' \
+      --replace 'pypng==0.0.20' 'pypng' \
+  '';
 
-  propagatedBuildInputs =
-    let
-      cobs = callPackage ./cobs.nix { };
-      scan-build = callPackage ./scan-build.nix { };
-      observable = callPackage ./observable.nix { };
-    in
-    [
-      click # >=6,<7
-      rich-click
-      pyserial
-      cachetools
-      requests
-      requests-futures
-      tabulate
-      jsonpickle
-      semantic-version
-      colorama
-      pyzmq
-      cobs
-      scan-build # ==2.0.13
-      sentry-sdk
-      observable
-      pypng # ==0.0.20
-      setuptools
-    ];
+  propagatedBuildInputs = let
+    click = callPackage ./click.nix {};
+    rich-click = callPackage ./rich-click.nix {click = click;};
+    cobs = callPackage ./cobs.nix {};
+    scan-build = callPackage ./scan-build.nix {};
+    observable = callPackage ./observable.nix {};
+  in [
+    click # >=6,<7
+    rich-click
+    pyserial
+    cachetools
+    requests
+    requests-futures
+    tabulate
+    jsonpickle
+    semantic-version
+    colorama
+    pyzmq
+    cobs
+    scan-build # ==2.0.13
+    sentry-sdk
+    observable
+    pypng # ==0.0.20
+    setuptools
+  ];
 
   meta = with lib; {
     description = "Command Line Interface for managing PROS projects. Works with V5 and the Cortex ";
     homepage = "https://github.com/purduesigbots/pros-cli";
     license = licenses.mpl20;
-    maintainers = with maintainers; [ BattleCh1cken ];
+    maintainers = with maintainers; [BattleCh1cken];
   };
 }

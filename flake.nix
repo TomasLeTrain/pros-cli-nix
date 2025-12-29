@@ -14,7 +14,7 @@
         , system
         , ...
         }: {
-          packages.default = pkgs.python310Packages.callPackage ./pros-cli.nix { };
+          packages.default = pkgs.python312Packages.callPackage ./pros-cli.nix { };
         };
       flake = {
         templates = {
