@@ -20,7 +20,6 @@ buildPythonPackage rec {
     repo = pname;
     rev = "refs/tags/v${version}";
     hash = "sha256-eqpxNurMHn4ClD0KjTQ7Yfny61tcYBRKlW74axjLI8A=";
-    # hash = "sha256-rWVJEuJx5nDUg6RvhubHu9U2Glilrkugjg28SpFIZys=";
   };
 
   propagatedBuildInputs = [
